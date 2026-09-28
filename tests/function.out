@@ -1,0 +1,12 @@
+PROGRAM 2
+FUNCTION hello
+ARGUMENTS 1
+VARREF user
+BODY 1
+COMMAND println
+ARGS 2
+STRING 11 "Hello, %."
+VARREF user
+COMMAND hello
+ARGS 1
+STRING 7 "World"

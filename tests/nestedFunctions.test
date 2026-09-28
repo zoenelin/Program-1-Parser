@@ -1,0 +1,9 @@
+$outer (%varI)
+{
+  set %varK (calc /sub %varI 45).
+  $inner(%varJ) {
+    calc /add %varJ %varK.
+  }
+}
+mkArray /nitems=5 /startval=100 /step=10 /var=%arr.
+iterItems 7 (iterItems outer %arr).

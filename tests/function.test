@@ -1,0 +1,4 @@
+$hello (%user) {
+  println "Hello, %." %user.
+}
+hello "World".
