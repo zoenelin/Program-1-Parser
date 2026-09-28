@@ -34,4 +34,16 @@
 
 [ \n\r\f\t]*  { continue; }
 
+"%" { return VARREF; }
+"/" { return OPTSTART; }
+"=" { return OPTPAIR; }
+"." { return CMDSEP; }
+"(" { return LPAR; }
+")" { return RPAR; }
+"{" { return LBRACE; }
+"}" { return RBRACE; }
+"$" { return LABEL; }
+
+[0-9]+ { yylval->str_temp = strdup(yytext); return INT; }
+
 %%
