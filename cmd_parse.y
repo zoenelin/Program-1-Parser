@@ -31,9 +31,71 @@ void print_loc(FILE*, YYLTYPE);
     char* str_temp;
 }
 
+    %token VARREF
+    %token OPTSTART
+    %token OPTPAIR
+    %token CMDSEP
+    %token LPAR
+    %token RPAR
+    %token LBRACE
+    %token RBRACE
+    %token LABEL
+
+    %token <str_temp> STR
+    %token <str_temp> SYM
+    %token <str_temp> INT
+    %token <str_temp> FLT
+
 %%
 
 /* TODO: Fill in the parser */
+
+variable:   VARREF SYM
+            ;
+
+sym:        SYM
+            ;
+
+int:        INT
+            ;
+
+float:      FLT
+            ;
+
+string:     STR
+            ;
+
+name_list:        %empty
+                  | variable name_list
+                  ;
+
+function:         LABEL SYM LPAR name_list RPAR LBRACE command_list RBRACE
+                  ;
+
+value_expression: sym
+                  | int 
+                  | float
+                  | string 
+                  |variable
+                  | LPAR command RPAR
+                  ;
+
+long_option:      OPTSTART SYM
+                  | OPTSTART SYM OPTPAIR value_expression
+                  ;
+
+arguements_list:  %empty
+                  | value_expression arguments_list
+                  | long_option arguments_list
+                  ;
+
+command:          sym arguments_list
+                  ;
+
+command_list:     %empty
+                  | function command_list
+                  | command CMDSEP command_list
+                  ;
 
 /* TODO: Your top-level rule should put an object of type CLObj* into *expression */
 input:          %empty { *expression = NULL; }

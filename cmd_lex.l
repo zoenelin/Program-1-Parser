@@ -30,7 +30,7 @@
 %option bison-bridge bison-locations
 %%
 
-\"([^\\\"]|\\.)*\" { yylval->str_temp = strdup(yytext); }
+\"([^\\\"]|\\.)*\" { yylval->str_temp = strdup(yytext);  return STR; }
 
 [ \n\r\f\t]*  { continue; }
 
@@ -44,6 +44,8 @@
 "}" { return RBRACE; }
 "$" { return LABEL; }
 
+[A-Za-z][A-Za-z0-9]+ { yylval->str_temp = strdup(yytext); return SYM; }
 [0-9]+ { yylval->str_temp = strdup(yytext); return INT; }
+-?[0-9]+\.[0-9]+ { yylval->str_temp = strdup(yytext); return FLT; }
 
 %%
