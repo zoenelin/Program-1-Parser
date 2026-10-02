@@ -29,40 +29,51 @@ void print_loc(FILE*, YYLTYPE);
 
 %union {
     char* str_temp;
+    CLObj* obj_temp;
 }
 
-    %token VARREF
-    %token OPTSTART
-    %token OPTPAIR
-    %token CMDSEP
-    %token LPAR
-    %token RPAR
-    %token LBRACE
-    %token RBRACE
-    %token LABEL
+    %token VARREF OPTSTART OPTPAIR CMDSEP LPAR RPAR LBRACE RBRACE LABEL
+    %token <str_temp> STR SYM INT FLT
 
-    %token <str_temp> STR
-    %token <str_temp> SYM
-    %token <str_temp> INT
-    %token <str_temp> FLT
+    %type <obj_temp> sym string int float variable
 
 %%
 
 /* TODO: Fill in the parser */
 
-variable:   VARREF SYM
+variable:   VARREF SYM {
+              $$ = malloc(sizeof(CLObj));
+              $$->type = VARIABLE;
+              $$->value = $2;
+            }
             ;
 
-sym:        SYM
+sym:        SYM {
+              $$ = malloc(sizeof(CLObj));
+              $$->type = SYMBOL;
+              $$->value = $1;
+            }
             ;
 
-int:        INT
+int:        INT {
+              $$ = malloc(sizeof(CLObj));
+              $$->type = INTEGER;
+              $$->value = $1;
+            }
             ;
 
-float:      FLT
+float:      FLT {
+              $$ = malloc(sizeof(OBj));
+              $$->type = FLOAT;
+              $$->value = $1;
+            }
             ;
 
-string:     STR
+string:     STR {
+              $$ = malloc(sizeof(CLObj));
+              $$->type = STRING;
+              $$->value = $1;
+            }
             ;
 
 name_list:        %empty
@@ -84,7 +95,7 @@ long_option:      OPTSTART SYM
                   | OPTSTART SYM OPTPAIR value_expression
                   ;
 
-arguements_list:  %empty
+arguments_list:  %empty
                   | value_expression arguments_list
                   | long_option arguments_list
                   ;
