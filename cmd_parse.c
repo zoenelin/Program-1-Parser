@@ -127,7 +127,19 @@ enum yysymbol_kind_t
   YYSYMBOL_INT = 14,                       /* INT  */
   YYSYMBOL_FLT = 15,                       /* FLT  */
   YYSYMBOL_YYACCEPT = 16,                  /* $accept  */
-  YYSYMBOL_variable = 17                   /* variable  */
+  YYSYMBOL_variable = 17,                  /* variable  */
+  YYSYMBOL_sym = 18,                       /* sym  */
+  YYSYMBOL_int = 19,                       /* int  */
+  YYSYMBOL_float = 20,                     /* float  */
+  YYSYMBOL_string = 21,                    /* string  */
+  YYSYMBOL_name_list = 22,                 /* name_list  */
+  YYSYMBOL_function = 23,                  /* function  */
+  YYSYMBOL_value_expression = 24,          /* value_expression  */
+  YYSYMBOL_long_option = 25,               /* long_option  */
+  YYSYMBOL_arguments_list = 26,            /* arguments_list  */
+  YYSYMBOL_command = 27,                   /* command  */
+  YYSYMBOL_command_list = 28,              /* command_list  */
+  YYSYMBOL_input = 29                      /* input  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -456,18 +468,18 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  4
+#define YYFINAL  25
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   2
+#define YYLAST   42
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  16
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  2
+#define YYNNTS  14
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  2
+#define YYNRULES  25
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  5
+#define YYNSTATES  43
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   270
@@ -516,9 +528,11 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int8 yyrline[] =
+static const yytype_uint8 yyrline[] =
 {
-       0,    44,    44
+       0,    45,    45,    52,    59,    66,    73,    80,    81,    84,
+     102,   103,   104,   105,   106,   107,   110,   111,   114,   115,
+     116,   119,   122,   123,   124,   128
 };
 #endif
 
@@ -537,13 +551,15 @@ yysymbol_name (yysymbol_kind_t yysymbol)
   {
   "end of file", "error", "invalid token", "VARREF", "OPTSTART",
   "OPTPAIR", "CMDSEP", "LPAR", "RPAR", "LBRACE", "RBRACE", "LABEL", "STR",
-  "SYM", "INT", "FLT", "$accept", "variable", YY_NULLPTR
+  "SYM", "INT", "FLT", "$accept", "variable", "sym", "int", "float",
+  "string", "name_list", "function", "value_expression", "long_option",
+  "arguments_list", "command", "command_list", "input", YY_NULLPTR
   };
   return yy_sname[yysymbol];
 }
 #endif
 
-#define YYPACT_NINF (-13)
+#define YYPACT_NINF (-19)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -557,7 +573,11 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -3,   -12,     2,   -13,   -13
+      -6,    -9,   -19,    -1,    -6,    10,   -19,    22,    16,    11,
+      12,    17,   -19,   -19,   -19,   -19,   -19,   -19,   -19,   -19,
+      -1,    -1,   -19,   -19,    -6,   -19,    28,   -19,    27,    26,
+     -19,   -19,   -19,    28,    29,    14,   -19,   -19,    30,   -19,
+      -6,    25,   -19
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -565,19 +585,25 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     2,     1
+      22,     0,     3,    18,    22,     0,    25,     0,     0,     0,
+       0,     0,     6,     4,     5,    14,    10,    11,    12,    13,
+      18,    18,    21,    23,    22,     1,     7,     2,    16,     0,
+      19,    20,    24,     7,     0,     0,    15,     8,     0,    17,
+      22,     0,     9
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -13,   -13
+     -19,   -18,    -2,   -19,   -19,   -19,     5,   -19,     6,   -19,
+     -11,    31,    -4,   -19
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2
+       0,    15,     3,    17,    18,    19,    34,     4,    20,    21,
+      22,     5,     6,     7
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -585,31 +611,47 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       1,     3,     4
+      23,    16,     9,    10,     8,     1,    11,     2,    33,    30,
+      31,    12,     2,    13,    14,    33,    24,     9,    16,    16,
+      32,    11,    25,    26,    27,    28,    12,     2,    13,    14,
+       2,     9,    35,    16,    36,    42,    41,    38,    37,    40,
+       0,    39,    29
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,    13,     0
+       4,     3,     3,     4,    13,    11,     7,    13,    26,    20,
+      21,    12,    13,    14,    15,    33,     6,     3,    20,    21,
+      24,     7,     0,     7,    13,    13,    12,    13,    14,    15,
+      13,     3,     5,    35,     8,    10,    40,     8,    33,     9,
+      -1,    35,    11
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,    17,    13,     0
+       0,    11,    13,    18,    23,    27,    28,    29,    13,     3,
+       4,     7,    12,    14,    15,    17,    18,    19,    20,    21,
+      24,    25,    26,    28,     6,     0,     7,    13,    13,    27,
+      26,    26,    28,    17,    22,     5,     8,    22,     8,    24,
+       9,    28,    10
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    16,    17
+       0,    16,    17,    18,    19,    20,    21,    22,    22,    23,
+      24,    24,    24,    24,    24,    24,    25,    25,    26,    26,
+      26,    27,    28,    28,    28,    29
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     2
+       0,     2,     2,     1,     1,     1,     1,     0,     2,     8,
+       1,     1,     1,     1,     1,     3,     2,     4,     0,     2,
+       2,     2,     0,     2,     3,     1
 };
 
 
@@ -1269,17 +1311,180 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* variable: VARREF SYM  */
-#line 44 "cmd_parse.y"
+#line 45 "cmd_parse.y"
                        {
               (yyval.obj_temp) = malloc(sizeof(CLObj));
               (yyval.obj_temp)->type = VARIABLE;
               (yyval.obj_temp)->value = (yyvsp[0].str_temp);
             }
-#line 1279 "cmd_parse.c"
+#line 1321 "cmd_parse.c"
+    break;
+
+  case 3: /* sym: SYM  */
+#line 52 "cmd_parse.y"
+                {
+              (yyval.obj_temp) = malloc(sizeof(CLObj));
+              (yyval.obj_temp)->type = SYMBOL;
+              (yyval.obj_temp)->value = (yyvsp[0].str_temp);
+            }
+#line 1331 "cmd_parse.c"
+    break;
+
+  case 4: /* int: INT  */
+#line 59 "cmd_parse.y"
+                {
+              (yyval.obj_temp) = malloc(sizeof(CLObj));
+              (yyval.obj_temp)->type = INTEGER;
+              (yyval.obj_temp)->value = (yyvsp[0].str_temp);
+            }
+#line 1341 "cmd_parse.c"
+    break;
+
+  case 5: /* float: FLT  */
+#line 66 "cmd_parse.y"
+                {
+              (yyval.obj_temp) = malloc(sizeof(CLObj));
+              (yyval.obj_temp)->type = FLOAT;
+              (yyval.obj_temp)->value = (yyvsp[0].str_temp);
+            }
+#line 1351 "cmd_parse.c"
+    break;
+
+  case 6: /* string: STR  */
+#line 73 "cmd_parse.y"
+                {
+              (yyval.obj_temp) = malloc(sizeof(CLObj));
+              (yyval.obj_temp)->type = STRING;
+              (yyval.obj_temp)->value = (yyvsp[0].str_temp);
+            }
+#line 1361 "cmd_parse.c"
+    break;
+
+  case 7: /* name_list: %empty  */
+#line 80 "cmd_parse.y"
+                                        { (yyval.obj_temp) = NULL; }
+#line 1367 "cmd_parse.c"
+    break;
+
+  case 8: /* name_list: variable name_list  */
+#line 81 "cmd_parse.y"
+                                        { (yyvsp[-1].obj_temp)->next = (yyvsp[0].obj_temp); (yyval.obj_temp) = (yyvsp[-1].obj_temp); }
+#line 1373 "cmd_parse.c"
+    break;
+
+  case 9: /* function: LABEL SYM LPAR name_list RPAR LBRACE command_list RBRACE  */
+#line 84 "cmd_parse.y"
+                                                                             { (yyval.obj_temp) = malloc(sizeof(CLObj)); (yyval.obj_temp)->type = FUNCTION; (yyval.obj_temp)->value = (yyvsp[-6].str_temp); (yyval.obj_temp)->child = (yyvsp[-4].obj_temp); (yyval.obj_temp)->next = NULL;
+                                                                               (yyval.obj_temp)->count = 0; CLObj *current = (yyvsp[-4].obj_temp); 
+                                                                               while (current != NULL){
+                                                                                (yyval.obj_temp)->count++;
+                                                                                current = current->next;
+                                                                               }
+                                                                               if((yyvsp[-4].obj_temp) == NULL){
+                                                                                (yyval.obj_temp)->child = (yyvsp[-1].obj_temp);
+                                                                               } else {
+                                                                                current = (yyvsp[-4].obj_temp);
+                                                                                while (current->next != NULL) {
+                                                                                  current = current->next;
+                                                                                }
+                                                                                current->next = (yyvsp[-1].obj_temp);
+                                                                                }
+                                                                              }
+#line 1394 "cmd_parse.c"
+    break;
+
+  case 11: /* value_expression: int  */
+#line 103 "cmd_parse.y"
+                                       { (yyval.obj_temp) = (yyvsp[0].obj_temp); }
+#line 1400 "cmd_parse.c"
+    break;
+
+  case 12: /* value_expression: float  */
+#line 104 "cmd_parse.y"
+                                       { (yyval.obj_temp) = (yyvsp[0].obj_temp); }
+#line 1406 "cmd_parse.c"
+    break;
+
+  case 13: /* value_expression: string  */
+#line 105 "cmd_parse.y"
+                                       { (yyval.obj_temp) = (yyvsp[0].obj_temp); }
+#line 1412 "cmd_parse.c"
+    break;
+
+  case 14: /* value_expression: variable  */
+#line 106 "cmd_parse.y"
+                                       { (yyval.obj_temp) = (yyvsp[0].obj_temp); }
+#line 1418 "cmd_parse.c"
+    break;
+
+  case 15: /* value_expression: LPAR command RPAR  */
+#line 107 "cmd_parse.y"
+                                       { (yyval.obj_temp) = (yyvsp[-1].obj_temp); }
+#line 1424 "cmd_parse.c"
+    break;
+
+  case 16: /* long_option: OPTSTART SYM  */
+#line 110 "cmd_parse.y"
+                                                            { (yyval.obj_temp) = malloc(sizeof(CLObj)); (yyval.obj_temp)->type = FLAG; (yyval.obj_temp)->value = (yyvsp[0].str_temp); (yyval.obj_temp)->child = NULL; (yyval.obj_temp)->next = NULL; }
+#line 1430 "cmd_parse.c"
+    break;
+
+  case 17: /* long_option: OPTSTART SYM OPTPAIR value_expression  */
+#line 111 "cmd_parse.y"
+                                                            { (yyval.obj_temp) = malloc(sizeof(CLObj)); (yyval.obj_temp)->type = LONG_OPTION; (yyval.obj_temp)->value = (yyvsp[-2].str_temp); (yyval.obj_temp)->child = (yyvsp[0].obj_temp); (yyval.obj_temp)->next = NULL; }
+#line 1436 "cmd_parse.c"
+    break;
+
+  case 18: /* arguments_list: %empty  */
+#line 114 "cmd_parse.y"
+                                                      { (yyval.obj_temp) = NULL; }
+#line 1442 "cmd_parse.c"
+    break;
+
+  case 19: /* arguments_list: value_expression arguments_list  */
+#line 115 "cmd_parse.y"
+                                                      { (yyvsp[-1].obj_temp)->next = (yyvsp[0].obj_temp); (yyval.obj_temp) = (yyvsp[-1].obj_temp); }
+#line 1448 "cmd_parse.c"
+    break;
+
+  case 20: /* arguments_list: long_option arguments_list  */
+#line 116 "cmd_parse.y"
+                                                      { (yyvsp[-1].obj_temp)->next = (yyvsp[0].obj_temp); (yyval.obj_temp) = (yyvsp[-1].obj_temp); }
+#line 1454 "cmd_parse.c"
+    break;
+
+  case 21: /* command: sym arguments_list  */
+#line 119 "cmd_parse.y"
+                                     { (yyval.obj_temp) = malloc(sizeof(CLObj)); (yyval.obj_temp)->type = COMMAND; (yyval.obj_temp)->value = (yyvsp[-1].obj_temp)->value; (yyval.obj_temp)->child = (yyvsp[0].obj_temp); (yyval.obj_temp)->next = NULL; }
+#line 1460 "cmd_parse.c"
+    break;
+
+  case 22: /* command_list: %empty  */
+#line 122 "cmd_parse.y"
+                                                  { (yyval.obj_temp) = NULL; }
+#line 1466 "cmd_parse.c"
+    break;
+
+  case 23: /* command_list: function command_list  */
+#line 123 "cmd_parse.y"
+                                                  { (yyvsp[-1].obj_temp)->next = (yyvsp[0].obj_temp); (yyval.obj_temp) = (yyvsp[-1].obj_temp); }
+#line 1472 "cmd_parse.c"
+    break;
+
+  case 24: /* command_list: command CMDSEP command_list  */
+#line 124 "cmd_parse.y"
+                                                  { (yyvsp[-2].obj_temp)->next = (yyvsp[0].obj_temp); (yyval.obj_temp) = (yyvsp[-2].obj_temp); }
+#line 1478 "cmd_parse.c"
+    break;
+
+  case 25: /* input: command_list  */
+#line 128 "cmd_parse.y"
+                             { *expression = (yyvsp[0].obj_temp);  }
+#line 1484 "cmd_parse.c"
     break;
 
 
-#line 1283 "cmd_parse.c"
+#line 1488 "cmd_parse.c"
 
       default: break;
     }
@@ -1482,7 +1687,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 115 "cmd_parse.y"
+#line 131 "cmd_parse.y"
 
 
 /* The code below produces more helpful syntax errors. */

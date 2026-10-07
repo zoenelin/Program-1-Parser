@@ -34,8 +34,8 @@ void print_loc(FILE*, YYLTYPE);
 
     %token VARREF OPTSTART OPTPAIR CMDSEP LPAR RPAR LBRACE RBRACE LABEL
     %token <str_temp> STR SYM INT FLT
+    %type <obj_temp> variable sym int float string name_list function value_expression long_option arguments_list command command_list
 
-    %type <obj_temp> sym string int float variable
 
 %%
 
@@ -63,7 +63,7 @@ int:        INT {
             ;
 
 float:      FLT {
-              $$ = malloc(sizeof(OBj));
+              $$ = malloc(sizeof(CLObj));
               $$->type = FLOAT;
               $$->value = $1;
             }
@@ -76,41 +76,56 @@ string:     STR {
             }
             ;
 
-name_list:        %empty
-                  | variable name_list
+name_list:        %empty                { $$ = NULL; }
+                  | variable name_list  { $1->next = $2; $$ = $1; } 
                   ;
 
-function:         LABEL SYM LPAR name_list RPAR LBRACE command_list RBRACE
-                  ;
+function:         LABEL SYM LPAR name_list RPAR LBRACE command_list RBRACE   { $$ = malloc(sizeof(CLObj)); $$->type = FUNCTION; $$->value = $2; $$->child = $4; $$->next = NULL;
+                                                                               $$->count = 0; CLObj *current = $4; 
+                                                                               while (current != NULL){
+                                                                                $$->count++;
+                                                                                current = current->next;
+                                                                               }
+                                                                               if($4 == NULL){
+                                                                                $$->child = $7;
+                                                                               } else {
+                                                                                current = $4;
+                                                                                while (current->next != NULL) {
+                                                                                  current = current->next;
+                                                                                }
+                                                                                current->next = $7;
+                                                                                }
+                                                                              }
+                                                                              ;
 
 value_expression: sym
-                  | int 
-                  | float
-                  | string 
-                  |variable
-                  | LPAR command RPAR
+                  | int                { $$ = $1; }
+                  | float              { $$ = $1; }
+                  | string             { $$ = $1; }
+                  | variable           { $$ = $1; }
+                  | LPAR command RPAR  { $$ = $2; }
                   ;
 
-long_option:      OPTSTART SYM
-                  | OPTSTART SYM OPTPAIR value_expression
+long_option:      OPTSTART SYM                              { $$ = malloc(sizeof(CLObj)); $$->type = FLAG; $$->value = $2; $$->child = NULL; $$->next = NULL; }
+                  | OPTSTART SYM OPTPAIR value_expression   { $$ = malloc(sizeof(CLObj)); $$->type = LONG_OPTION; $$->value = $2; $$->child = $4; $$->next = NULL; }
                   ;
 
-arguments_list:  %empty
-                  | value_expression arguments_list
-                  | long_option arguments_list
+arguments_list:  %empty                               { $$ = NULL; }      
+                  | value_expression arguments_list   { $1->next = $2; $$ = $1; }
+                  | long_option arguments_list        { $1->next = $2; $$ = $1; }
                   ;
 
-command:          sym arguments_list
+command:          sym arguments_list { $$ = malloc(sizeof(CLObj)); $$->type = COMMAND; $$->value = $1->value; $$->child = $2; $$->next = NULL; }
                   ;
 
-command_list:     %empty
-                  | function command_list
-                  | command CMDSEP command_list
+command_list:     %empty                          { $$ = NULL; }
+                  | function command_list         { $1->next = $2; $$ = $1; }
+                  | command CMDSEP command_list   { $1->next = $3; $$ = $1; }
                   ;
 
 /* TODO: Your top-level rule should put an object of type CLObj* into *expression */
-input:          %empty { *expression = NULL; }
-        ;
+input:          command_list { *expression = $1;  } /* deleted the empty terminal as command_list already has empty and don't want to cause errors */
+                ;
 
 %%
 

@@ -8,12 +8,19 @@ typedef enum {
   INTEGER,
   FLOAT,
   VARIABLE,
-  SYMBOL
+  SYMBOL,
+  COMMAND,
+  LONG_OPTION, 
+  FUNCTION,
+  FLAG
 } Obj;
 
 struct CLObj {
   Obj type;
   char *value;
+  int count;
+  CLObj *child;
+  CLObj *next;
 };
 
 void evaluate(CLObj *);
